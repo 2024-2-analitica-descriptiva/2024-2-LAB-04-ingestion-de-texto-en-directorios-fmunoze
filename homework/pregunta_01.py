@@ -5,6 +5,10 @@
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
 
+import pandas as pd
+import glob
+import os
+
 
 def pregunta_01():
     """
@@ -71,3 +75,38 @@ def pregunta_01():
 
 
     """
+
+    """
+    Genera dos archivos llamados "train_dataset.csv" y "test_dataset.csv"
+    con frases y su respectivo sentimiento, a partir de los datos almacenados
+    en la carpeta "input" que contiene las subcarpetas "train" y "test".
+
+    Los archivos generados estarán en la carpeta "files/output/".
+    """
+
+    # Se crea la carpeta "output" si no existe
+    if not os.path.exists("output"):
+        os.makedirs("output")
+
+    # Se leen los archivos de la carpeta "train" y se almacenan en un DataFrame
+    train_files = glob.glob("files/input/train/*/*.txt")
+    train_data = []
+    for file in train_files:
+        with open(file, "r") as f:
+            train_data.append({"phrase": f.read(), "target": file.split("/")[-2]})
+    train_df = pd.DataFrame(train_data)
+
+    # Se leen los archivos de la carpeta "test" y se almacenan en un DataFrame
+    test_files = glob.glob("files/input/test/*/*.txt")
+    test_data = []
+    for file in test_files:
+        with open(file, "r") as f:
+            test_data.append({"phrase": f.read(), "target": file.split("/")[-2]})
+    test_df = pd.DataFrame(test_data)
+
+    # Se guardan los DataFrames en archivos CSV
+    train_df.to_csv("files/output/train_dataset.csv", index=False)
+    test_df.to_csv("files/output/test_dataset.csv", index=False)
+
+
+pregunta_01()
